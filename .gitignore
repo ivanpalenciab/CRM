@@ -1,0 +1,9 @@
+# Local configuration
+local.settings.py
+*.env
+.env.*
+
+/venv
+
+__pycache__/
+*.py[cod]
