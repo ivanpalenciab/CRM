@@ -4,7 +4,7 @@ from typing import Optional
 class ProductCreate(BaseModel):
     name: str
     description:str
-    price:int
+    price:float
     stock: int
     category: str
     brand:str
