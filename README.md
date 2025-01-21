@@ -25,11 +25,11 @@ The application will be capable of integrating with a machine learning system to
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/ivanpalenciab/CRM.git
    ```
 2. Navigate to the project directory:
    ```bash
-   cd <directory-name>
+   cd CRM
    ```
 3. Install the required dependencies:
    ```bash
@@ -70,11 +70,11 @@ La aplicación será capaz de integrarse con un sistema de machine learning para
 
 1. Clona el repositorio:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/ivanpalenciab/CRM.git
    ```
 2. Navega al directorio del proyecto:
    ```bash
-   cd <nombre-del-directorio>
+   cd CRM
    ```
 3. Instala las dependencias requeridas:
    ```bash
