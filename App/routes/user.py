@@ -14,7 +14,7 @@ from schemas.user import UserCreate, UserUpdate
 user = APIRouter()
 
 @user.get("/users/")
-def get_user():
+async def get_user():
     """
     This endpoint allows obtaining all users registered in the database.
     """
@@ -22,8 +22,22 @@ def get_user():
         stmt = select(users)
         result = conn.execute(stmt)
 
+        #Getting total from database 
+        query = select(users.c.id,users.c.name,users.c.last_name, func.sum(orders.c.total)
+                   ).select_from(users.join(orders,orders.c.user_id==users.c.id)
+                                 ).group_by(users.c.id,users.c.name,users.c.last_name)      
+        result_total = conn.execute(query)
+        user_with_total = result_total.fetchall()
+
         users_list = []
+        
+        user_number = 0 # this is a counter 
         for row in result:
+            
+            #Here we obtein the total for each costumer
+            total_buyed = user_with_total[user_number][3]
+
+
             user ={
                 "id":row.id,
                 "name":row.name,
@@ -34,9 +48,11 @@ def get_user():
                 "gender":row.gender,
                 "email":row.email,
                 "last_order":row.last_order,
-                "registration_date":row.registration_date
+                "registration_date":row.registration_date,
+                "total_buyed":total_buyed
             }
             users_list.append(user)
+            user_number += 1
         
         return users_list
 
@@ -84,17 +100,6 @@ This endpoint allow you to get one user, You will need the user Id
     except Exception as e:
         return {"error": f"Error processing user: {str(e)}"}
     
-@user.get("/get-total/{user_id}", deprecated=True)
-async def get_total(user_id):
-     
-    query = select(users.c.id,users.c.name,users.c.last_name, func.sum(orders.c.total)
-                   ).select_from(users.join(orders,orders.c.user_id==users.c.id)
-                                 ).where(users.c.id==user_id
-                                         ).group_by(users.c.id,users.c.name,users.c.last_name)      
-    result = conn.execute(query)
-    user = result.fetchone()
-    total_buyed = user[3]
-    return total_buyed
     
 @user.post("/create-users/")
 def create_user(user: UserCreate):
