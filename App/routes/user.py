@@ -1,12 +1,13 @@
 from datetime import date
 
 from fastapi import APIRouter,HTTPException
-from sqlalchemy import select,delete,update
+from sqlalchemy import select,delete,update,func
 from sqlalchemy.exc import SQLAlchemyError
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
 from models.user import users
+from models.order import orders
 from config.db import conn, engine
 from schemas.user import UserCreate, UserUpdate
 
@@ -47,15 +48,23 @@ async def get_user(user_id):
     """
 This endpoint allow you to get one user, You will need the user Id
 """
-    query=select(users).where(users.c.id  == user_id)
+    query=users.select().where(users.c.id  == user_id)
     try:
         response = conn.execute(query)
         user=response.fetchone()
 
         if user is None:
             raise HTTPException(status_code=404, detail="User not found")
+            
         else:
-
+            query_2 = select(users.c.id,users.c.name,users.c.last_name, func.sum(orders.c.total)
+                   ).select_from(users.join(orders,orders.c.user_id==users.c.id)
+                                 ).where(users.c.id==user_id
+                                         ).group_by(users.c.id,users.c.name,users.c.last_name)      
+            result = conn.execute(query_2)
+            user_2 = result.fetchone()
+            total_buyed = user_2[3]
+            
             user_info = {
                 "id":user[0],
                 "name":user[1],
@@ -66,13 +75,26 @@ This endpoint allow you to get one user, You will need the user Id
                 "gender":user[6],
                 "email":user[7],
                 "last_order":user[8],
-                "registration_date":user[9]
+                "registration_date":user[9],
+                "total_buyed":total_buyed
 
             }
 
         return user_info
     except Exception as e:
         return {"error": f"Error processing user: {str(e)}"}
+    
+@user.get("/get-total/{user_id}", deprecated=True)
+async def get_total(user_id):
+     
+    query = select(users.c.id,users.c.name,users.c.last_name, func.sum(orders.c.total)
+                   ).select_from(users.join(orders,orders.c.user_id==users.c.id)
+                                 ).where(users.c.id==user_id
+                                         ).group_by(users.c.id,users.c.name,users.c.last_name)      
+    result = conn.execute(query)
+    user = result.fetchone()
+    total_buyed = user[3]
+    return total_buyed
     
 @user.post("/create-users/")
 def create_user(user: UserCreate):
