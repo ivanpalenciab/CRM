@@ -1,9 +1,9 @@
 from sqlalchemy import Table,Column,ForeignKey
 from sqlalchemy.sql.sqltypes import Integer,Numeric
 
-from config.db import meta, engine
-from models.order import orders
-from models.product import products
+from App.config.db import meta, engine
+from App.models.order import orders
+from App.models.product import products
 
 orders_products = Table("order_product",meta,
                         Column("id",Integer,primary_key=True),

@@ -1,8 +1,8 @@
 from sqlalchemy import Table, Column,ForeignKey
 from sqlalchemy.sql.sqltypes import Integer, String,Date,Numeric
 
-from config.db import meta, engine
-from models.user import users
+from App.config.db import meta, engine
+from App.models.user import users
 
 orders = Table("orders",meta, 
         Column("id",Integer, primary_key=True), 

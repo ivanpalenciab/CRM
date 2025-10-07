@@ -6,10 +6,10 @@ from sqlalchemy.exc import SQLAlchemyError
 from pydantic import ValidationError
 from sqlalchemy.orm import Session
 
-from models.user import users
-from models.order import orders
-from config.db import conn, engine
-from schemas.user import UserCreate, UserUpdate
+from App.models.user import users
+from App.models.order import orders
+from App.config.db import conn, engine
+from App.schemas.user import UserCreate, UserUpdate
 
 user = APIRouter()
 

@@ -3,9 +3,9 @@ from sqlalchemy import select,delete,update
 from sqlalchemy.exc import SQLAlchemyError
 from pydantic import ValidationError
 
-from models.order import orders
-from config.db import conn
-from schemas.order import CreateOrder,UpdateOrder
+from App.models.order import orders
+from App.config.db import conn
+from App.schemas.order import CreateOrder,UpdateOrder
 
 order = APIRouter()
 

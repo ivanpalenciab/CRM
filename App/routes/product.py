@@ -3,10 +3,10 @@ from sqlalchemy import select,delete,update
 from sqlalchemy.exc import SQLAlchemyError
 from pydantic import ValidationError
 
-from models.product import products
-from config.db import conn
-from schemas.product import ProductCreate
-from schemas.product import ProductUpdate
+from App.models.product import products
+from App.config.db import conn
+from App.schemas.product import ProductCreate
+from App.schemas.product import ProductUpdate
 
 product = APIRouter()
 

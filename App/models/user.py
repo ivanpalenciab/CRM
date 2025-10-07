@@ -3,7 +3,7 @@ from datetime import date
 from sqlalchemy import Table, Column, func
 from sqlalchemy.sql.sqltypes import Integer, String,Date,BigInteger
 
-from config.db import meta, engine
+from App.config.db import meta, engine
 
 users = Table("users",meta, 
         Column("id",Integer, primary_key=True), 

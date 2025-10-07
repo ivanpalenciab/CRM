@@ -2,6 +2,7 @@
 local.settings.py
 *.env
 .env.*
+__init__.py
 
 /venv
 

@@ -3,11 +3,11 @@ from sqlalchemy import select,delete,update
 from pydantic import ValidationError
 from sqlalchemy.exc import SQLAlchemyError
 
-from schemas.order_product import CreateOrderDetail,UpdateOrderDetail
-from models.order_product import orders_products
-from models.product import products
-from models.order import orders
-from config.db import conn
+from App.schemas.order_product import CreateOrderDetail,UpdateOrderDetail
+from App.models.order_product import orders_products
+from App.models.product import products
+from App.models.order import orders
+from App.config.db import conn
 
 order_product = APIRouter()
 @order_product.get("/detail/{detail_id}")
