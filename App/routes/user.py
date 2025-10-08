@@ -19,19 +19,25 @@ async def get_user():
     This endpoint allows obtaining all users registered in the database.
     """
     try:
+       
         stmt = select(users)
         result = conn.execute(stmt)
 
         #Getting total from database 
-        query = select(users.c.id,users.c.name,users.c.last_name, func.sum(orders.c.total)
-                   ).select_from(users.join(orders,orders.c.user_id==users.c.id)
+        query = select(
+                    users.c.id,
+                    users.c.name,
+                    users.c.last_name, 
+                    func.coalesce(func.sum(orders.c.total),0).label("total")
+                   ).select_from(users.outerjoin(orders,orders.c.user_id==users.c.id)
                                  ).group_by(users.c.id,users.c.name,users.c.last_name)      
         result_total = conn.execute(query)
         user_with_total = result_total.fetchall()
 
         users_list = []
-        
+
         user_number = 0 # this is a counter 
+        
         for row in result:
             
             #Here we obtein the total for each costumer
@@ -51,13 +57,16 @@ async def get_user():
                 "registration_date":row.registration_date,
                 "total_buyed":total_buyed
             }
+            
             users_list.append(user)
+            
             user_number += 1
         
         return users_list
 
     except Exception as e:
-        return {"error": f"Error geting data: {str(e)}"}
+        #return {"error": f"Error geting data: {str(e)}"}
+        raise HTTPException(status_code=500, detail=f"Internal server error: {e}")
 
 @user.get("/user/{user_id}")
 async def get_user(user_id):
